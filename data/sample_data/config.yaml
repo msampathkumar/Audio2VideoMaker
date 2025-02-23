@@ -1,0 +1,54 @@
+########################################################################
+############### Configuration file for  Audio2VideoMaker ###############
+########################################################################
+
+# # # # # # # # # # # # # # #
+# Add your audio file here
+# # # # # # # # # # # # # # #
+
+audio: tell-me-the-truth-260010.mp3
+
+# # # # # # # # # # # # # # #
+# Add your output path here
+# # # # # # # # # # # # # # #
+
+video: tell-me-the-truth-260010.mp4
+
+# # # # # # # # # # # # # # # #  #
+# Add your text information here #
+# # # # # # # # # # # # # # # #  #
+
+images:
+    # # # # # # # # # # # # # # #
+    # Add your first image data #
+    # # # # # # # # # # # # # # #
+    - duration: 15
+      text: |
+        
+        Welcome to Audio-Video.
+        
+        
+        I hope that this tool is useful to you.
+        
+                        Just don't be evil for anyone!
+        
+        
+        Thank you, Author
+    # # # # # # # # # # # # # # #
+    # Add your next image data #
+    # # # # # # # # # # # # # # #
+    - duration: 30
+      text: Hello world!
+
+    # # # # # # # # # # # # # # #
+    # Add your next image data #
+    # # # # # # # # # # # # # # #
+    - duration: 15
+      text: "Thank you                              Thank you\n\n\n\n\n\n\n\n\n\nThank you                              Thank you"
+
+# # # # # # # # # # # # # # #
+# Add your output path here
+# # # # # # # # # # # # # # #
+
+comment: Thank you, Author
+
