@@ -7,14 +7,11 @@ import config
 
 def get_font():
     if os.path.isfile(config.FONT_PATH):
-        try:
-            print(f"Loading found found at {config.FONT_PATH}.")
-            font = ImageFont.truetype(config.FONT_PATH, config.FONT_SIZE)
-        except IOError:
-            print(f"Warning: Font not found at {config.FONT_PATH}. Using default font.")
-            font = ImageFont.load_default()  # Fallback to default font
+        print(f"Loading found found at {config.FONT_PATH}.")
+        font = ImageFont.truetype(config.FONT_PATH, size=config.FONT_SIZE)
     else:
-        font = ImageFont.load_default()
+        print(f"Warning: Font not found at {config.FONT_PATH}. Using default font.")
+        font = ImageFont.load_default(size=config.FONT_SIZE)  # Fallback to default font
     return font
 
 
@@ -38,14 +35,13 @@ def generate_text_image(text_input: str, output_path: str = "output.png") -> str
     )
     draw = ImageDraw.Draw(img)
 
-    x_pos = config.IMAGE_PADDING_TOP
-    y_pos = config.IMAGE_PADDING_LEFT
+    y_pos = config.IMAGE_PADDING_Y
     for line in text_input.splitlines():
-        draw.text((x_pos, y_pos), line, font=font, fill=config.IMAGE_TEXT_COLOR)
+        draw.text((config.IMAGE_PADDING_X, y_pos), line, font=font, fill=config.IMAGE_TEXT_COLOR)
         y_pos += config.IMAGE_PADDING_ROW
 
     img.save(output_path)
-    # print(f'Generated Image"s text: {text_input}')
+    # print(f'Generated Image's text: {text_input}')
     return output_path
 
 
