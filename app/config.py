@@ -1,5 +1,6 @@
 # Adjust as needed
-FONT_PATH = "font/Roboto-Medium.ttf"
+# FONT_PATH = "font/Roboto-Medium.ttf"
+FONT_PATH = "font/Gupter/Gupter-Regular.ttf"
 FONT_SIZE = 55
 
 # Image size
