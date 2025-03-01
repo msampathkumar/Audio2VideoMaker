@@ -7,13 +7,19 @@ import text_manager
 
 import time
 
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logger.ERROR)
+
 
 def get_font():
     if os.path.isfile(config.FONT_PATH):
-        print(f"Loading found found at {config.FONT_PATH}.")
+        logging.info(f"Loading found found at {config.FONT_PATH}.")
         font = ImageFont.truetype(config.FONT_PATH, size=config.FONT_SIZE)
     else:
-        print(f"Warning: Font not found at {config.FONT_PATH}. Using default font.")
+        logging.warning(
+            f"Warning: Font not found at {config.FONT_PATH}. Using default font."
+        )
         font = ImageFont.load_default(size=config.FONT_SIZE)  # Fallback to default font
     return font
 
@@ -25,7 +31,9 @@ def get_text_box_dimensions(font, text):
     left, top, right, bottom = font.getbbox(text)
     width = right - left
     height = bottom - top
-    print(f'Image"s Width: {width}, Height: {height} for ("{str(len(text)) + text}")')
+    logging.info(
+        f'Image"s Width: {width}, Height: {height} for ("{str(len(text)) + text}")'
+    )
     return width, height
 
 
@@ -35,15 +43,21 @@ def is_text_image_safety_limits(font, text):
 
     width, height = get_text_box_dimensions(font, text)
     if width + x > config.IMAGE_DIMENSION[0]:
-        print(f"Warning: Text Image exceed limit for x dimension (text: {text})")
+        logging.warning(
+            f"Warning: Text Image exceed limit for x dimension (text: {text})"
+        )
         return False
     if height + y > config.IMAGE_DIMENSION[1]:
-        print(f"Warning: Text Image exceed limit for y dimension (text: {text})")
+        logging.warning(
+            f"Warning: Text Image exceed limit for y dimension (text: {text})"
+        )
         return False
     return True
 
 
 def generate_text_image(text_input: str, output_path: str = "output.png") -> str:
+    # remove trailing space or line breaks
+    text_input = text_input.rstrip()
     txt_mgr = text_manager.SlideManager()
     txt_mgr.add_body(text_input)
     time.sleep(0.5)
@@ -72,14 +86,14 @@ def generate_text_image(text_input: str, output_path: str = "output.png") -> str
 
     # Save the image
     img.save(output_path)
-    # print(f'Generated Image's text: {text_input}')
+    logging.debug(f" - Generated Image's text: {text_input}")
     return output_path
 
 
 def generate_multiple_text_images(text_inputs: list, output_paths: list) -> None:
     for text, out_path in zip(text_inputs, output_paths):
         image_path = generate_text_image(text, out_path)
-        print(f" - Generated Image: {image_path}")
+        print(f" ✅  Generated Image: {image_path}")
 
 
 def create_test_image():
@@ -88,14 +102,14 @@ def create_test_image():
     # About the Font
     text = "Hello World"
     width, height = get_text_box_dimensions(font, text)
-    # print(f'Font Width: {width}, Height: {height} for ("{text}")')
+    logging.debug(f'Font Width: {width}, Height: {height} for ("{text}")')
 
     estimated_text_length = round(
         (config.IMAGE_DIMENSION[0] / (width / len(text))) * 0.9
     )
     estimated_text_height = round((config.IMAGE_DIMENSION[0] * 0.9) / height)
-    print(f"Estimated Max Text length is {estimated_text_length}")
-    print(f"Estimated Max Text height is {estimated_text_height}")
+    logging.debug(f"Estimated Max Text length is {estimated_text_length}")
+    logging.debug(f"Estimated Max Text height is {estimated_text_height}")
 
     # Create an example image
     text = "".join([str(x) for x in range(10)]) + ";"

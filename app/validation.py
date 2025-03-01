@@ -1,20 +1,18 @@
+import logging
 import os
 
 import yaml
 
+from utils import Status, logger
 
-class Status:
-    ok = "✅ OK!"
-    not_ok = "❌ Not ok!"
-    overriding = "☑️ Overriding old one!"
-    to_create = "☑️ Overriding old one!"
+logger = logger.setLevel(logging.DEBUG)
 
 
 class Validation(Status):
     """User input configuration's validater"""
 
     def __init__(self, config_file_path: str) -> None:
-        print(f" User input: {config_file_path}")
+        logger.info(f" User input: {config_file_path}")
         self._config_file_path = config_file_path
         self._folder_path = os.path.dirname(self._config_file_path)
         self.config_data = None
@@ -32,20 +30,20 @@ class Validation(Status):
     def read_config(self) -> None:
         with open(self._config_file_path, "rt", encoding="utf8") as fp:
             self.config_data = yaml.safe_load(fp)
-        print(f"[{self.ok}] Load config")
+        logger.debug(f"{self.ok} Load config")
 
     def check_file_path(self, file_path: str) -> bool:
         status = os.path.isfile(file_path)
         if status:
-            print(f"[{self.ok}] Checking file - {file_path}")
+            logger.debug(f"{self.ok} Checking file - {file_path}")
         else:
-            print(f"[{self.not_ok}] Checking file - {file_path}")
+            logger.debug(f"{self.not_ok} Checking file - {file_path}")
         return status
 
     def check_file_inputs(self) -> None:
         # check if `audio` data
         if "audio" not in self.config_data:
-            print(f"Missing `audio` section in {self._config_file_path}")
+            logger.info(f"Missing `audio` section in {self._config_file_path}")
             raise Exception(f"Missing `audio` section in {self._config_file_path}")
         else:
             self.audio_file_path = os.path.join(
@@ -55,7 +53,7 @@ class Validation(Status):
 
         # check if `video` data
         if "video" not in self.config_data:
-            print(f"Missing `video` section in {self.config_data}")
+            logger.warning(f"Missing `video` section in {self.config_data}")
         else:
             _name = self.config_data.get("video", "movie.mp4")
             self.video_file_path = os.path.join(self._folder_path, _name)
@@ -63,11 +61,11 @@ class Validation(Status):
 
         # check images data
         if "images" not in self.config_data:
-            print(f"Missing `images` section in {self._config_file_path}")
+            logger.warning(f"Missing `images` section in {self._config_file_path}")
         else:
             i = 0
             for image_record in self.config_data.get("images"):
-                print(f" - [Image: { i }] Loading image: {image_record}")
+                logger.info(f" - ({ i }) Loading image data: {str(image_record)[:50]}...")
                 self.txt_image_text.append(image_record["text"])
                 self.txt_image_durations.append(image_record["duration"])
 
@@ -83,15 +81,15 @@ class Validation(Status):
 class GetConfig(Validation):
 
     def show(self) -> None:
-        print("----" * 12)
-        print(f" - Config file path:\t{self._config_file_path}")
-        print(f" - Audio input path:\t{self.audio_file_path}")
-        print(f" - Video Output path:\t{self.video_file_path}")
-        print(f" - Image text duration:\t {self.txt_image_durations}")
-        print(f" - Image file names:\t{self.txt_image_names}")
-        print("----" * 12)
+        logger.info("----" * 12)
+        logger.info(f" - Config file path: {self._config_file_path}")
+        logger.info(f" - Audio input path: {self.audio_file_path}")
+        logger.info(f" - Video Output path: {self.video_file_path}")
+        logger.info(f" - Image text duration: {self.txt_image_durations}")
+        logger.info(f" - Image file names: {self.txt_image_names}")
+        logger.info("----" * 12)
 
 
 if __name__ == "__main__":
-    config = GetConfig("data/sample_data/config.yaml")
+    config = GetConfig("../data/sample_data/config.yaml")
     config.show()

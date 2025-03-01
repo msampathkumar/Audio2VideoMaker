@@ -1,8 +1,16 @@
+import logging
+
 import sys
 
 import validation
 import image
 import video
+
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+
+logger = logging.getLogger("AudioVideoMaker")
 
 
 def main(
@@ -46,7 +54,7 @@ if __name__ == "__main__":
     else:
         print(f"Found provided input config file {config_path}")
     config_info = validation.GetConfig(config_path)
-    config_info.show()
+    # config_info.show()
 
     # validate_and_show_config(config_path)
     if "image" in sys.argv:

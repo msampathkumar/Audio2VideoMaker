@@ -1,20 +1,27 @@
+import logging
+
+import utils
+
+
 class SlideManager:
-    "Content manager for preparing a text slide"
+    """
+    Content manager for preparing a text slide
+    """
 
     def __init__(self):
         # special slides (first & slides)
         self.start = None
         self.end = None
-
+        #
         # regular slides with 3 sections (header, body, footer)
         self.header = list()  # 0-2 rows
-        self.body = list()  # Limits are 6-8 rows # 40 charecter limit
+        self.body = list()  # 40 letters limit
         self.footer = list()  # 2 rows
-
+        #
         # limits
         self._line_text_limits = 40  # Characters
-        self._multi_line_text_limits = 10  # Characters
-
+        self._multi_line_text_limits = 12  # lines
+        #
         self._debug_show_full_logs = False
 
     def _is_line_within_limits(self, text_line):
@@ -26,12 +33,15 @@ class SlideManager:
         return len(multiline_text.split("\n")) < self._multi_line_text_limits
 
     def _validate_text(self, multiline_text):
-        # print("> Running Validator")
+        logging.info("> Running Validator")
         if not self._is_text_within_limits(multiline_text):
             print("> Height: ❌ Too many lines in the input text")
+            print(">>>>" * 12)
+            print(multiline_text)
+            print("<<<" * 12)
         else:
             if self._debug_show_full_logs:
-                print("> Height: ✅ Lines with in the limit")
+                logging.info("> Height: ✅ Lines with in the limit")
         for line in multiline_text.splitlines("\n"):
             line = line.strip()
             if not self._is_line_within_limits(line):
@@ -41,7 +51,7 @@ class SlideManager:
                 )
             else:
                 if self._debug_show_full_logs:
-                    print(f"> Length: ✅")
+                    logging.info(f"> Length: ✅")
 
     def is_text_with_limits(self, text):
         self.end = text
@@ -68,25 +78,25 @@ class SlideManager:
             return
         if type(text) == list:
             for line in text:
-                print(line)
+                logging.info(line)
         elif type(text) == str:
-            print(text)
+            logging.info(text)
         else:
             raise Exception("Error: Unexpected input error!")
 
     def show(self):
         # special slides (start, end)
-        print("# Start - slide")
+        logging.info("# Start - slide")
         self.print_row(self.start)
-        print("# End - slide")
+        logging.info("# End - slide")
         self.print_row(self.end)
 
         # regular slide with 3 sections
-        print("# Header")
+        logging.info("# Header")
         self.print_row(self.header)
-        print("# Body")
+        logging.info("# Body")
         self.print_row(self.body)
-        print("# Footer")
+        logging.info("# Footer")
         self.print_row(self.footer)
 
     def generate_image(self, text, output_path):
@@ -106,9 +116,9 @@ przez nieszlachetnych jak Sadhana
 Chroń mnie, o miłosierny Panie!
 
 You redeemed sinners like Ajamil
+                            You redeemed sinners like Ajamil
 and also ferried across
 ignoble ones like Sadhana.
 Protect me, O merciful Lord!
-""".strip()
+"""
     )
-    # manager.show()
