@@ -48,8 +48,8 @@ def get_text_box_dimensions(font: ImageFont.FreeTypeFont, text: str) -> tuple[in
         A tuple containing the width and height of the text box.
     """
     left, top, right, bottom = font.getbbox(text)
-    width = right - left
-    height = bottom - top
+    width = int(right - left)
+    height = int(bottom - top)
     logger.debug(
         f"Text box dimensions for '{text[:20]}...': Width={width}, Height={height}"
     )

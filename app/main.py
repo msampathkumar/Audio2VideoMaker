@@ -51,7 +51,7 @@ def main(
     # Generate video
     if generate_video:
         logger.debug("Generating video...")
-        video.generated_multi_image_video_with_audio(
+        video.generate_video_with_audio(
             images=config_data.txt_image_names,
             durations=config_data.txt_image_durations,
             output_path=config_data.video_file_path,
