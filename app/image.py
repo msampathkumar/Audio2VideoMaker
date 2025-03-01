@@ -3,6 +3,9 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 import config
+import text_manager
+
+import time
 
 
 def get_font():
@@ -25,11 +28,12 @@ def get_text_box_dimensions(font, text):
     print(f'Image"s Width: {width}, Height: {height} for ("{str(len(text)) + text}")')
     return width, height
 
+
 def is_text_image_safety_limits(font, text):
     x = config.IMAGE_PADDING_X
     y = config.IMAGE_PADDING_Y
 
-    width, height =  get_text_box_dimensions(font, text)
+    width, height = get_text_box_dimensions(font, text)
     if width + x > config.IMAGE_DIMENSION[0]:
         print(f"Warning: Text Image exceed limit for x dimension (text: {text})")
         return False
@@ -40,6 +44,9 @@ def is_text_image_safety_limits(font, text):
 
 
 def generate_text_image(text_input: str, output_path: str = "output.png") -> str:
+    txt_mgr = text_manager.SlideManager()
+    txt_mgr.add_body(text_input)
+    time.sleep(0.5)
 
     font = get_font()
 

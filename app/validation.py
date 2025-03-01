@@ -11,6 +11,7 @@ class Status:
 
 
 class Validation(Status):
+    """User input configuration's validater"""
 
     def __init__(self, config_file_path: str) -> None:
         print(f" User input: {config_file_path}")
