@@ -1,115 +1,147 @@
 import logging
 
-import utils
+from utils import Status
+
+logger = logging.getLogger(__name__)
 
 
-class SlideManager:
+class TextManager:
     """
-    Content manager for preparing a text slide
+    Manages and validates text content for image generation.
     """
 
-    def __init__(self):
-        # special slides (first & slides)
-        self.start = None
-        self.end = None
-        #
-        # regular slides with 3 sections (header, body, footer)
-        self.header = list()  # 0-2 rows
-        self.body = list()  # 40 letters limit
-        self.footer = list()  # 2 rows
-        #
-        # limits
-        self._line_text_limits = 40  # Characters
-        self._multi_line_text_limits = 12  # lines
-        #
-        self._debug_show_full_logs = False
+    def __init__(self) -> None:
+        """
+        Initializes the TextManager with default settings.
+        """
+        self.text_content: str = ""
+        self.max_line_length: int = 40  # Maximum characters per line
+        self.max_lines: int = 12  # Maximum number of lines
+        self.debug_show_full_logs: bool = False
 
-    def _is_line_within_limits(self, text_line):
-        # check if the number of characters in the text line is within the limits
-        return len(text_line) < self._line_text_limits
+    def _is_line_within_limits(self, text_line: str) -> bool:
+        """
+        Checks if a single line of text is within the character limit.
 
-    def _is_text_within_limits(self, multiline_text):
-        # check if the number of lines in the text is within the limits
-        return len(multiline_text.split("\n")) < self._multi_line_text_limits
+        Args:
+            text_line: The line of text to check.
 
-    def _validate_text(self, multiline_text):
-        logging.info("> Running Validator")
+        Returns:
+            True if the line is within the limit, False otherwise.
+        """
+        return len(text_line) <= self.max_line_length
+
+    def _is_text_within_limits(self, multiline_text: str) -> bool:
+        """
+        Checks if the number of lines in a multi-line text is within the limit.
+
+        Args:
+            multiline_text: The multi-line text to check.
+
+        Returns:
+            True if the text is within the limit, False otherwise.
+        """
+        return len(multiline_text.splitlines()) <= self.max_lines
+
+    def _validate_text(self, multiline_text: str) -> None:
+        """
+        Validates a multi-line text against length and line limits.
+
+        Args:
+            multiline_text: The multi-line text to validate.
+
+        Raises:
+            ValueError: If the text exceeds the defined limits.
+        """
+        logger.debug(f"{Status.WIP} Running Text Validator")
         if not self._is_text_within_limits(multiline_text):
-            print("> Height: ❌ Too many lines in the input text")
-            print(">>>>" * 12)
-            print(multiline_text)
-            print("<<<" * 12)
+            error_message = (
+                f"{Status.NOT_OK} Height: Too many lines in the input text "
+                f"(max {self.max_lines} lines allowed):\n"
+                f"{multiline_text}"
+            )
+            logger.error(error_message)
+            # raise ValueError(error_message)
         else:
-            if self._debug_show_full_logs:
-                logging.info("> Height: ✅ Lines with in the limit")
-        for line in multiline_text.splitlines("\n"):
+            if self.debug_show_full_logs:
+                logger.debug(f"{Status.OK} Height: Lines within the limit")
+
+        for line_number, line in enumerate(multiline_text.splitlines()):
             line = line.strip()
             if not self._is_line_within_limits(line):
-                print(
-                    "> Length: ❌ Too many words in one lines"
-                    + f"\n\t[{line}]\n\tReduce ({len(line) - self._line_text_limits}) letters!"
+                error_message = (
+                    f"{Status.NOT_OK} Length: Too many characters in line {line_number+1} "
+                    f"(max {self.max_line_length} characters allowed):\n"
+                    f"\t[{line}]\n"
+                    f"\tReduce ({len(line) - self.max_line_length}) characters!"
                 )
+                logger.error(error_message)
+                # raise ValueError(error_message)
             else:
-                if self._debug_show_full_logs:
-                    logging.info(f"> Length: ✅")
+                if self.debug_show_full_logs:
+                    logger.debug(
+                        f"{Status.OK} Length: Line {line_number+1} within limits"
+                    )
 
-    def is_text_with_limits(self, text):
-        self.end = text
+        logger.debug(f"{Status.OK} Text validated successfully.")
 
-    def add_start_slide(self, text):
-        self.start = text
+    def set_text(self, text: str) -> None:
+        """
+        Sets the text content and validates it.
 
-    def end_slide(self, text):
-        self.end = text
+        Args:
+            text: The text content to set.
 
-    def add_header(self, text):
-        self.header = text
+        Raises:
+            ValueError: If the text is invalid.
+        """
+        self._validate_text(text)
+        self.text_content = text
 
-    def add_body(self, text):
-        self.body = text
-        self._validate_text(self.body)
+    # For only testing purposes
+    def generate_image(self, output_path: str) -> str:
+        """
+        Generates an image from the current text content.
 
-    def add_footer(self, text):
-        pass
+        Args:
+            output_path: The path to save the generated image.
 
-    @staticmethod
-    def print_row(text):
-        if not text:
-            return
-        if type(text) == list:
-            for line in text:
-                logging.info(line)
-        elif type(text) == str:
-            logging.info(text)
+        Returns:
+            The path to the generated image.
+
+        Raises:
+            ValueError: If no text content is set.
+        """
+        if not self.text_content:
+            raise ValueError("No text content set. Call set_text() first.")
+
+        from image import generate_text_image
+
+        logger.debug(
+            f"{Status.WIP} Generating image for text: {self.text_content[:50]}..."
+        )
+        image_path = generate_text_image(self.text_content, output_path)
+        logger.info(f"{Status.OK} Image generated at: {image_path}")
+        return image_path
+
+    def show(self) -> None:
+        """
+        Displays the current text content.
+        """
+        if self.text_content:
+            logger.debug("---- Current Text Content ----")
+            logger.debug(str(self.text_content.strip()))
+            logger.debug("---- End of Text Content ----")
         else:
-            raise Exception("Error: Unexpected input error!")
-
-    def show(self):
-        # special slides (start, end)
-        logging.info("# Start - slide")
-        self.print_row(self.start)
-        logging.info("# End - slide")
-        self.print_row(self.end)
-
-        # regular slide with 3 sections
-        logging.info("# Header")
-        self.print_row(self.header)
-        logging.info("# Body")
-        self.print_row(self.body)
-        logging.info("# Footer")
-        self.print_row(self.footer)
-
-    def generate_image(self, text, output_path):
-        from .image import generate_text_image
-
-        self.add_body(text)
-        generate_text_image(text, output_path)
+            logger.warning("No text content set.")
 
 
 if __name__ == "__main__":
-    manager = SlideManager()
-    manager.add_body(
-        """
+    logging.basicConfig(level=logging.DEBUG)
+    manager = TextManager()
+    try:
+        manager.set_text(
+            """
 Odkupiłeś grzeszników takich jak Ajamil
 a także przeprowadziłeś
 przez nieszlachetnych jak Sadhana
@@ -121,4 +153,8 @@ and also ferried across
 ignoble ones like Sadhana.
 Protect me, O merciful Lord!
 """
-    )
+        )
+        manager.show()
+        manager.generate_image("test_image.png")  # For only testing purposes
+    except ValueError as e:
+        logger.error(f"{Status.NOT_OK} Text validation error: {e}")
