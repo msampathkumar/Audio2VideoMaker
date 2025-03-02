@@ -1,5 +1,7 @@
 import logging
 
+import config
+
 from utils import Status
 
 logger = logging.getLogger(__name__)
@@ -15,8 +17,8 @@ class TextManager:
         Initializes the TextManager with default settings.
         """
         self.text_content: str = ""
-        self.max_line_length: int = 40  # Maximum characters per line
-        self.max_lines: int = 12  # Maximum number of lines
+        self.max_line_length: int = config.IMAGE_TEXT_LINE_CHAR_LIMIT
+        self.max_lines: int = config.IMAGE_TEXT_LINES_LIMIT
         self.debug_show_full_logs: bool = False
 
     def _is_line_within_limits(self, text_line: str) -> bool:

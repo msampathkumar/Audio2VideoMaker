@@ -154,17 +154,14 @@ def create_test_image() -> None:
     logger.debug(
         f"Sample text '{sample_text}' dimensions: Width={width}, Height={height}"
     )
-
-    estimated_text_length = 42
-    estimated_text_height = 12
-    logger.debug(f"Estimated max text length: {estimated_text_length}")
-    logger.debug(f"Estimated max text height: {estimated_text_height}")
+    logger.debug(f"Estimated max text length: {config.IMAGE_TEXT_LINE_CHAR_LIMIT}")
+    logger.debug(f"Estimated max text height: {config.IMAGE_TEXT_LINES_LIMIT}")
 
     # Create an example image
     text_line = "".join([str(x) for x in range(10)]) + ";"
-    text_line = text_line * 10
+    text_line = (text_line * 50)[: config.IMAGE_TEXT_LINE_CHAR_LIMIT]
     text = "\n".join(
-        [str(x + 1) + "-" + text_line for x in range(estimated_text_height)]
+        [f"{x:02d}-{text_line}" for x in range(1, config.IMAGE_TEXT_LINES_LIMIT + 1)]
     )
     image_path = generate_text_image(text, "test_image.png")
     print(f"{Status.OK} Generated test image: {image_path}")

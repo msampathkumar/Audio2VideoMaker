@@ -119,9 +119,7 @@ def generate_video_with_audio(
     logger.info(f"{Status.OK} Video file created at: {output_path}")
 
 
-def combine_audio_and_image(
-    image_path: str, audio_path: str, output_path: str
-) -> None:
+def combine_audio_and_image(image_path: str, audio_path: str, output_path: str) -> None:
     """
     Combines a single image and an audio file into a video.
 
@@ -145,6 +143,7 @@ def combine_audio_and_image(
         preset="faster",
     )
     logger.info(f"{Status.OK} Video file created at: {output_path}")
+
 
 #
 # # Example usage
