@@ -2,20 +2,20 @@
 
 **Audio2VideoMaker** is a powerful Python-based tool that transforms your audio files into captivating videos. It achieves this by synchronizing a sequence of text-based images with your audio, creating a dynamic visual experience that complements the audio content.  This project is perfect for creating:
 
-*   **Lyric videos:** Display song lyrics in sync with the music.
-*   **Podcast videos:** Add visual interest to your podcast episodes.
-*   **Educational content:** Combine audio explanations with relevant text and visuals.
-*   **Social media content:** Create engaging videos for platforms like YouTube, Instagram, and TikTok.
+* **Lyric videos:** Display song lyrics in sync with the music.
+* **Podcast videos:** Add visual interest to your podcast episodes.
+* **Educational content:** Combine audio explanations with relevant text and visuals.
+* **Social media content:** Create engaging videos for platforms like YouTube, Instagram, and TikTok.
 * **Presentations**: Create a video presentation with audio and text.
 
 ## Key Features
 
-*   **Audio-Driven Video Generation:** Automatically generates a video based on the duration of your audio file.
-*   **Text-Based Image Creation:** Creates images with customizable text, font, color, and layout.
-*   **Multi-Image Support:** Supports multiple images with varying durations, allowing for a dynamic video flow.
-*   **Configurable via YAML:** Easily customize the video's content, timing, and appearance using a simple YAML configuration file.
-*   **Error Handling:** Robust error handling to catch issues like missing files or text exceeding image boundaries.
-*   **Logging:** Detailed logging to track the video creation process and identify potential problems.
+* **Audio-Driven Video Generation:** Automatically generates a video based on the duration of your audio file.
+* **Text-Based Image Creation:** Creates images with customizable text, font, color, and layout.
+* **Multi-Image Support:** Supports multiple images with varying durations, allowing for a dynamic video flow.
+* **Configurable via YAML:** Easily customize the video's content, timing, and appearance using a simple YAML configuration file.
+* **Error Handling:** Robust error handling to catch issues like missing files or text exceeding image boundaries.
+* **Logging:** Detailed logging to track the video creation process and identify potential problems.
 * **Status Indicators:** Clear status indicators (e.g., [✅ OK!], [⏳️WIP]) in the logs to show the progress and success of operations.
 * **Customizable:** Change the font, font size, background color, text color, padding, and more.
 
@@ -94,17 +94,17 @@
 
 **Generate an Image:**
 
-```shell
-python main.py image data/sample_data/config. yaml
-```  
+    ```shell
+    python main.py image data/sample_data/config. yaml
+    ```  
 
 This command will create an image(s) based on the configuration in `config.yaml`.
 
 **Generate a Video:**
 
-```shell
-python main.py video data/sample_data/config. yaml
-```
+    ```shell
+    python main.py video data/sample_data/config. yaml
+    ```
  
 This command will create a video based on the configuration in `config.yaml`.
 
@@ -112,11 +112,9 @@ This command will create a video based on the configuration in `config.yaml`.
 
 1. **Run the test script**
 
-
-```
-./test.sh
-```
-
+    ```
+    ./test.sh
+    ```
 
 ## Project Structure
 
@@ -143,7 +141,6 @@ Audio2VideoMaker/
 
 *   **Fonts:** Google Fonts (You can download and use any font you like).
 
-
 ## Contributing
 
 If you want to contribute to the project, please follow these steps:
@@ -157,45 +154,3 @@ If you want to contribute to the project, please follow these steps:
 ## License
 
 MIT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
