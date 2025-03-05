@@ -98,7 +98,8 @@ def generate_text_image(text_input: str, output_path: str) -> str:
     text_input = text_input.rstrip()  # Remove trailing spaces/line breaks
     txt_mgr = text_manager.TextManager()
     txt_mgr.set_text(text_input)  # Validate text using TextManager
-    time.sleep(0.1)  # Small delay to allow for text validation
+    text_input = txt_mgr.rearrange_text()  # Rearrange text to be at possible center
+    time.sleep(0.2)  # Small delay to allow for text validation
 
     font = get_font()
     img = Image.new(
@@ -154,14 +155,17 @@ def create_test_image() -> None:
     logger.debug(
         f"Sample text '{sample_text}' dimensions: Width={width}, Height={height}"
     )
-    logger.debug(f"Estimated max text length: {config.IMAGE_TEXT_LINE_CHAR_LIMIT}")
-    logger.debug(f"Estimated max text height: {config.IMAGE_TEXT_LINES_LIMIT}")
+    logger.debug(f"Estimated max text length: {config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT}")
+    logger.debug(f"Estimated max text height: {config.IMAGE_TEXT_MAX_LINES_LIMIT}")
 
     # Create an example image
     text_line = "".join([str(x) for x in range(10)]) + ";"
-    text_line = (text_line * 50)[: config.IMAGE_TEXT_LINE_CHAR_LIMIT]
+    text_line = (text_line * 50)[: config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT]
     text = "\n".join(
-        [f"{x:02d}-{text_line}" for x in range(1, config.IMAGE_TEXT_LINES_LIMIT + 1)]
+        [
+            f"{x:02d}-{text_line}"
+            for x in range(1, config.IMAGE_TEXT_MAX_LINES_LIMIT + 1)
+        ]
     )
     image_path = generate_text_image(text, "test_image.png")
     print(f"{Status.OK} Generated test image: {image_path}")

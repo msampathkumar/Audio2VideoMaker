@@ -74,8 +74,8 @@ IMAGE_TEXT_COLOR = colors["white"]
 IMAGE_BACKGROUND_COLOR = colors["navy"]  # "rgb(0, 0, 162)"  # Dark blue background
 
 # Text
-IMAGE_TEXT_LINE_CHAR_LIMIT = 45  # Maximum characters per line
-IMAGE_TEXT_LINES_LIMIT = 16  # Maximum number of lines
+IMAGE_TEXT_MAX_LINE_CHAR_LIMIT = 45  # Maximum characters per line
+IMAGE_TEXT_MAX_LINES_LIMIT = 16  # Maximum number of lines
 
 # --- Video Settings ---
 # Frames per second for the generated video.

@@ -17,8 +17,8 @@ class TextManager:
         Initializes the TextManager with default settings.
         """
         self.text_content: str = ""
-        self.max_line_length: int = config.IMAGE_TEXT_LINE_CHAR_LIMIT
-        self.max_lines: int = config.IMAGE_TEXT_LINES_LIMIT
+        self.max_line_length: int = config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT
+        self.max_lines: int = config.IMAGE_TEXT_MAX_LINES_LIMIT
         self.debug_show_full_logs: bool = False
 
     def _is_line_within_limits(self, text_line: str) -> bool:
@@ -87,7 +87,7 @@ class TextManager:
 
         logger.debug(f"{Status.OK} Text validated successfully.")
 
-    def set_text(self, text: str) -> None:
+    def set_text(self, text: str) -> list[str]:
         """
         Sets the text content and validates it.
 
@@ -99,6 +99,37 @@ class TextManager:
         """
         self._validate_text(text)
         self.text_content = text
+
+    def rearrange_text(self) -> str:
+        """To re-arrange the input text to be at the center of the image."""
+        text = self.text_content.strip()
+        text1 = self._rearrange_text_by_line(text)
+        text2 = self._rearrange_text_by_height(text1)
+        return text2
+
+    @staticmethod
+    def _rearrange_text_by_line(text) -> str:
+        """Adjust the text to be at the center by width"""
+        import math
+
+        text_lines = text.splitlines()
+        diffs = [len(line) for line in text_lines]
+        _diff = config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT - max(diffs)
+        if _diff > 0:
+            prefix = " " * math.ceil(_diff / 0.66)
+            print(prefix, diffs, _diff, math.ceil(_diff * 0.66))
+            text_lines = [prefix + line for line in text_lines]
+        return "\n".join(text_lines)
+
+    @staticmethod
+    def _rearrange_text_by_height(text) -> str:
+        """Adjust the text to be at the center by height"""
+        import math
+
+        lines = len(text.strip().splitlines())
+        diff = config.IMAGE_TEXT_MAX_LINES_LIMIT - lines
+        prefix = "\n" * math.ceil(diff / 2)
+        return prefix + text
 
     # For only testing purposes
     def generate_image(self, output_path: str) -> str:
