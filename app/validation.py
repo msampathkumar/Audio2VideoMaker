@@ -66,9 +66,9 @@ class ConfigValidator(Status):
             raise ConfigValidationError(
                 f"Configuration file not found: {self.config_file_path}"
             )
-        except yaml.YAMLError as e:
+        except yaml.YAMLError as err:
             raise ConfigValidationError(
-                f"Error parsing YAML file: {self.config_file_path}\n{e}"
+                f"Error parsing YAML file: {self.config_file_path}\n{err}"
             )
 
     def _validate_audio_section(self) -> None:
@@ -93,11 +93,16 @@ class ConfigValidator(Status):
         """
         Validates the 'video' section of the configuration.
         """
-        if "video" not in self.config_data:
-            logger.warning(
-                f"Missing 'video' section in configuration file: {self.config_file_path}. Using default 'movie.mp4'"
+        default_video_name = "movie.mp4"
+        if self.audio_file_path and self.audio_file_path.endswith(".mp3"):
+            default_video_name = (
+                os.path.splitext(os.path.basename(self.audio_file_path))[0] + ".mp4"
             )
-            self.video_file_path = os.path.join(self.folder_path, "movie.mp4")
+        if "video" not in self.config_data:
+            self.video_file_path = os.path.join(self.folder_path, default_video_name)
+            logger.warning(
+                f"Missing 'video' section in configuration file: {self.config_file_path}. Using default '{self.video_file_path}'"
+            )
         else:
             self.video_file_path = os.path.join(
                 self.folder_path, self.config_data["video"]
@@ -199,7 +204,7 @@ class GetConfig(ConfigValidator):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     try:
-        config = GetConfig("../data/Shabad01/config.yaml")
+        config = GetConfig("../data/sample_data/config.yaml")
         config.show_config()
     except ConfigValidationError as e:
         logger.error(f"{ Status.NOT_OK } Configuration error: {e}")
