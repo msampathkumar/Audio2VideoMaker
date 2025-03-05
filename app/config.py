@@ -65,7 +65,7 @@ FONT_SIZE = 42
 IMAGE_DIMENSION = (1024, 720)
 
 # Padding around the text within the image.
-IMAGE_PADDING_X = 10  # Left padding
+IMAGE_PADDING_X = 80  # Left padding
 IMAGE_PADDING_Y = 10  # Top padding
 IMAGE_PADDING_ROW = int(FONT_SIZE * 1.04)  # Vertical spacing between text lines
 

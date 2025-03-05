@@ -103,23 +103,41 @@ class TextManager:
     def rearrange_text(self) -> str:
         """To re-arrange the input text to be at the center of the image."""
         text = self.text_content.strip()
-        text1 = self._rearrange_text_by_line(text)
-        text2 = self._rearrange_text_by_height(text1)
-        return text2
+        # text = self._rearrange_text_by_line(text)
+        text = self._rearrange_text_by_height(text)
+        return text
+
+    def _rearrange_text_by_line(self, text, center_by_line=False) -> str:
+        if center_by_line:
+            return self._rearrange_text_by_line2(text)
+        else:
+            return self._rearrange_text_by_line1(text)
 
     @staticmethod
-    def _rearrange_text_by_line(text) -> str:
+    def _rearrange_text_by_line1(text) -> str:
+        # todo: check and remove this un-used method
+        #   when using mono-spaced fonts, they may be of use
         """Adjust the text to be at the center by width"""
         import math
 
         text_lines = text.splitlines()
         diffs = [len(line) for line in text_lines]
         _diff = config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT - max(diffs)
+        prefix = " " * math.ceil(_diff / 0.80)
         if _diff > 0:
-            prefix = " " * math.ceil(_diff / 0.66)
-            print(prefix, diffs, _diff, math.ceil(_diff * 0.66))
+            # print('-' * len(prefix), diffs, _diff, len(prefix))
             text_lines = [prefix + line for line in text_lines]
         return "\n".join(text_lines)
+
+    @staticmethod
+    def _rearrange_text_by_line2(text) -> str:
+        """Adjust the text to be at the center by width"""
+        text_lines = text.splitlines()
+        limit = config.IMAGE_TEXT_MAX_LINE_CHAR_LIMIT
+        text_lines = [line.center(limit) for line in text_lines]
+        return "\n".join(text_lines)
+
+
 
     @staticmethod
     def _rearrange_text_by_height(text) -> str:
